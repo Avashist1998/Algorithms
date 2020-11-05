@@ -10,7 +10,7 @@ class decision_stamp():
         # The threshold value that the feature should be measured against
         self.threshold = 0
         # Pairity of the threshold
-        self.pairty = 0
+        self.pairty = 1
         self.weight_error = 0
         self.weights = None
     
@@ -21,6 +21,7 @@ class decision_stamp():
                         "weight_error":self.weight_error}
         return parameters
 
+    
     def fit(self, data=None, label=None, weight=None):
         '''
         X, y, W should all be numpy array
@@ -30,19 +31,22 @@ class decision_stamp():
         '''
         if (data is None and label is None):
             print("Improper input in the function")
-            self.feature_index = 0
-            self.threshold = 0
         else:
             f_star = float('inf')
             [row, col] = data.shape
+            labels, counts = np.unique(label, return_counts=True)
+            if (counts[0] > counts[1]):
+                label = -1*label
+                self.pairty = -1
             if weight is None:
-                init_weigth = np.array([1/col]*row)
-                weight = init_weigth
+                counts = (1/labels.shape[0])*(1/np.array(counts))
+                new_init_weight = [counts[np.where(labels == l)[0][0]] for l in list(label)]
+                weight = np.array(new_init_weight)
             for j in range(col):
                 index = data[:,j].argsort()
                 x_j = data[:,j][index]
-                y_j = 2*label[index] - 1
-                d_j = weight[index]
+                y_j = label[index]
+                d_j = weight[index] 
                 f_curr = sum(d_j[y_j == 1])
                 if f_curr<f_star:
                     f_star = f_curr
@@ -58,20 +62,13 @@ class decision_stamp():
             self.threshold = theta_star
             self.weight_error = f_star
             self.weights = weight
-            prediction1 = np.array(data[:,j_star] <= theta_star).astype(int)
-            prediction2 = np.array(data[:,j_star] > theta_star).astype(int)
-            score1 = self.score(prediction1, label)
-            score2 = self.score(prediction2, label)
-            if score2 > score1:
-                self.pairty = 1
-
+        return self
     def predict(self, data):
-        if self.pairty:
-            prediction = data[:,self.feature_index] > self.threshold
-            prediction = np.array(prediction).astype(int)
-        else:
-            prediction = data[:,self.feature_index] <= self.threshold
-            prediction = np.array(prediction).astype(int)
+        if self.pairty == -1:
+            prediction = (data[:,self.feature_index] > self.threshold).astype(int) 
+        else :
+            prediction = (data[:,self.feature_index] <= self.threshold).astype(int)
+        prediction = 2*prediction - 1
         return prediction
     
     def score(self, label, prediction):

@@ -1,17 +1,16 @@
 from __future__ import absolute_import
-from .decision_stamp import decision_stamp
 import numpy as np 
+from .decision_stamp import decision_stamp
 
-class adaboost():
+class ada_boost():
     def __init__(self, n_estimators=10, clf=decision_stamp):
         self.clf = clf
         self.n_estimators = n_estimators
         self.alpha = list()
         self.scores = list()
         self.weak_clf = list()
-        self.weight_error = list()
         
-    def get_params(self, deep=True):
+    def get_params(self):
         return{'n_estimators':self.n_estimators}
 
     def set_parmas(self, **parameters):
@@ -19,20 +18,15 @@ class adaboost():
             setattr(self, parameter, value)
         return self
 
-    def beta_cal (self,epsolon):
-        beta = 1/((1-epsolon)/epsolon)
+    def beta_cal(self,epsolon):
+        beta = epsolon/(1-epsolon)
         return beta
     
-    def weight_cal(self, weight, label, prediction):
-        e = (prediction == label).astype(int)
-        epsolan = np.sum(weight*(1-e))
+    def weight_cal(self, epsolan, weight, label, prediction):
+        miss = (prediction != label).astype(int)
         beta = self.beta_cal(epsolan)
-        if epsolan == 0:
-            weight_new = weight
-            beta = 0.000001
-        else:
-            weight_new = weight*beta**e
-            weight_new = weight_new/sum(weight_new)
+        weight_new = weight*[beta**(1-m) for m in miss]
+        weight_new = weight_new/sum(weight_new)
         alpha = np.log(1/beta)
         self.alpha.append(alpha)
         return weight_new
@@ -47,7 +41,7 @@ class adaboost():
         return y_pred
 
     def fit(self, data,label,weight= None):
-        if weight==None:
+        if weight is None:
             labels, counts = np.unique(label, return_counts=True)
             counts = 0.5*(1/np.array(counts))
             new_init_weight = [counts[np.where(labels == l)[0][0]] for l in list(label)]
@@ -57,7 +51,7 @@ class adaboost():
             curr_clf = self.clf()
             curr_clf.fit(data,label,weight)
             curr_pred = curr_clf.predict(data)
-            weight = self.weight_cal(weight,label,curr_pred)
+            weight = self.weight_cal(curr_clf.weight_error,weight,label,curr_pred)
             self.weak_clf.append(curr_clf)
             self.scores.append(self.score(data,label))  
 

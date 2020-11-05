@@ -14,9 +14,12 @@ def file_prep(path):
 def encoder (y):
     unique = list(np.unique(y))
     encoder = lambda x: unique.index(x)
-    y_new = np.array(list(map(encoder, y)))
+    y_new = 2*np.array(list(map(encoder, y)))-1 
     return y_new
 
+def dict_printer(params):
+    for key, value in params.items():
+        print(key,value)
 
 def my_train_test_split(X, y, test_size=0.2, random_state=42):
     [row, _] = X.shape

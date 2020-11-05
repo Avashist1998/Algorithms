@@ -17,8 +17,8 @@
 
 ### Sample Code 
 ```
-    from machine_learning.adaboost import adaboost
-    my_ada = adaboost()
+    from machine_learning.adaboost import ada_boost
+    my_ada = ada_boost()
     my_ada.fit(X_train, y_train)
     prediction = my_ada.predict(X_test)
     score = my_ada.accuracy(prediction,y_test)

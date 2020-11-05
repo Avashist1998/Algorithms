@@ -26,19 +26,17 @@ class TestDecisionTree(unittest.TestCase):
         self.assertIsNone(my_stamp.feature_index)
         self.assertIsNone(my_stamp.weights)
         self.assertEqual(my_stamp.threshold, 0)
-        self.assertEqual(my_stamp.pairty, 0)
+        self.assertEqual(my_stamp.pairty, 1)
         self.assertEqual(my_stamp.weight_error,0)
     
-    def test_prediction(self):
+    def test_behavior(self):
         '''
         Function to test the behavior of the classifer
         '''
         my_stamp = decision_stamp()
         my_stamp.fit(X_train,y_train)
         prediction = my_stamp.predict(X_test)
-        score = my_stamp.score(prediction,y_test)
         self.assertEqual(my_stamp.feature_index, 4)
-        self.assertAlmostEqual(score, 0.9262106072252114)
 
 if __name__ == "__main__":
    unittest.main()
