@@ -1,12 +1,25 @@
 import numpy as np
+import pandas as pd 
 
+def file_prep(path):
+    FILEDF = pd.read_csv(path)
+    cols = FILEDF.columns
+    y = FILEDF[cols[-1]]
+    X = FILEDF.drop(columns = cols[-1])
+    X = X.to_numpy()
+    y = y.to_numpy()
+    y = encoder(y)
+    return X, y, cols
+    
 def encoder (y):
     unique = list(np.unique(y))
     encoder = lambda x: unique.index(x)
-    y_new = np.array(list(map(encoder, y)))
-    y_new = 2*y_new - 1
+    y_new = 2*np.array(list(map(encoder, y)))-1 
     return y_new
 
+def dict_printer(params):
+    for key, value in params.items():
+        print(key,value)
 
 def my_train_test_split(X, y, test_size=0.2, random_state=42):
     [row, _] = X.shape
