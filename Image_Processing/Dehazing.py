@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from Algorithms.utils import read_image, rgb_min_image, min_filter
+from Algorithms.image_processing.utils import read_image, rgb_min_image, min_filter
 
 class DarkPrior():
     def __init__(self, epsilon=10**-8):
