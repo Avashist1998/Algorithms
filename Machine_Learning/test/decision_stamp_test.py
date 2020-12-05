@@ -1,13 +1,13 @@
 import os
 import unittest
-from utils import my_train_test_split, encoder, file_prep
+from machine_learning.utils import my_train_test_split, encoder, file_prep
 from machine_learning.decision_stamp import decision_stamp
 
 '''
     Testing the Decision Stamp behavior
 '''
-PATH = os.getcwd()
-DATAPATH = os.path.join(PATH, 'Dataset')
+PATH = os.path.join(os.getcwd(), '..')
+DATAPATH = os.path.join(PATH, 'dataset')
 DATAFILES = os.listdir(DATAPATH) 
 FILESPATH = os.path.join(DATAPATH, DATAFILES[0])
 X, y, features = file_prep(FILESPATH)
