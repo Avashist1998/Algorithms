@@ -1,10 +1,11 @@
-import os
+import os, sys
 import unittest 
-from utils import my_train_test_split, encoder, file_prep
-from machine_learning.adaboost import ada_boost
+from ..utils import my_train_test_split, encoder,file_prep
+# from ...machine_learning.utils import my_train_test_split, encoder, file_prep
+from ...machine_learning.adaboost import ada_boost
 
-PATH = os.getcwd()
-DATAPATH = os.path.join(PATH, 'Dataset')
+PATH = os.path.join(os.getcwd(), '..')
+DATAPATH = os.path.join(PATH, 'dataset')
 DATAFILES = os.listdir(DATAPATH)
 
 FILESPATH = os.path.join(DATAPATH, DATAFILES[0])
