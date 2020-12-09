@@ -4,7 +4,7 @@ with open("README.md","r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-        name="Algorithms",
+        name="Algorithms-abhay",
         version="0.0.1",
         author="Abhay Vashist",
         author_email="avashist98@tamu.edu",
